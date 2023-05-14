@@ -241,9 +241,24 @@
 										</select>
 									</div>
 									<div class="form-group">
+										<!--Este seccion del codigo frontend es donde se solicita la url , por lo que es la fuente
+										del problema de falta de validacion , asi que el cambio se realiza aqui-->
 										<label for="inputURLCurso">URL</label>
+										<!--En este input se debe de contemplar el atributo pattern para insertar una expresion
+										regular que valida el formato de url valido que es del tipo: hhtp o https://dominio.com-->
+
+										<!--La expresion regular:
+											http que requiere tener http
+											s? si tiene o no el protocolo https
+											: el caracter de :
+											\/\/ es el escape de los caracteres //
+											(www\.)? validar si contara o no con el www
+											[-a-zA-Z0-9@:%._\+~#=]{1,256} es la validacion del dominio
+											\.[a-zA-Z0-9()]{1,6} es la validacion del subdominio
+											\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*) es para el .com , .net , etc
+										-->
 										<input type="url" class="form-control" id="inputURLCurso" autocomplete="off" placeholder="https://web.whatsapp.com/"
-											th:field="*{url}" required>
+											th:field="*{url}" pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)" required>
 									</div>
 
 									<button id="btnCrear" type="submit" class="btn btn-primary mr-2 mt-3">Crear</button>
