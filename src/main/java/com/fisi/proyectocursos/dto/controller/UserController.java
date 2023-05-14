@@ -94,6 +94,14 @@ public class UserController {
 		
 		if (passwordEncoder.matches(passwordForm, passwordDB)) {
 			String newPassword = passwordDTO.getNewPassword();
+			// SE AÑADE VALIDACIÓN DE CONTRASEÑA CON 8 CARACTERES MÍNIMO Y 1 MAYÚSCULA, 1 MINÚSCULA Y 1 NÚMERO
+			//	ESTO  SE HACE CON UNA EXPRESIÓN REGULAR
+			// EL MOTIVO  DE ESTA VALIDACIÓN ES QUE LA CONTRASEÑA SEA MÁS SEGURA
+
+			if (newPassword.length() < 8 || !newPassword.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$")) {
+				redirectAttributes.addFlashAttribute("error", "La contraseña debe tener al menos 8 caracteres y contener al menos una mayúscula, una minúscula y un número");
+				return "redirect:/usuario/cuenta";
+			}
 			user.setPassword(passwordEncoder.encode(newPassword));
 			
 			userService.save(user);
