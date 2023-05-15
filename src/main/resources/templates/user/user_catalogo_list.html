@@ -211,6 +211,7 @@
 												<th>Horario</th>
 												<th>Duración</th>
 												<th>Enlace</th>
+												<th>Favorito</th> <!-- Nueva columna -->
 											</tr>
 										</thead>
 										<tbody>
@@ -224,6 +225,11 @@
 														<i class="btn-icon-prepend" data-feather="info"></i>
 													</a>
 												</td>
+												<td>
+													<button class="btn btn-sm btn-outline-primary toggleFavorite" th:attr="data-id=${course.id}">
+														<i class="btn-icon-prepend" data-feather="star"></i>
+													</button>
+												</td> <!-- Nueva columna -->
 											</tr>
 										</tbody>
 									</table>
@@ -261,7 +267,14 @@
 	<!-- custom js for this page -->
 	<script src="/js/data-table.js"></script>
 	<!-- end custom js for this page -->
-
+	<script>
+    $(document).ready(function() {
+        $('.toggleFavorite').click(function() {
+            $(this).toggleClass('btn-outline-primary btn-primary');
+            $(this).find('i').toggleClass('feather-star feather-star-filled');
+        });
+    });
+	</script>
 </body>
 
 </html>

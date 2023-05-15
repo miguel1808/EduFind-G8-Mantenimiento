@@ -216,16 +216,22 @@
 									<table id="dataTableExample" class="table table-hover">
 										<thead>
 											<tr>
+												<th>Favorito</th> <!-- Nueva columna -->
 												<th>Nombre</th>
 												<th>Fecha de inicio</th>
 												<th>Horario</th>
 												<th>Duración</th>
 												<th>Enlace</th>
-												<th>Acción</th>
+
 											</tr>
 										</thead>
 										<tbody>
 											<tr th:each="course: ${courses}">
+												<td>
+													<button class="btn btn-sm btn-outline-primary toggleFavorite" th:attr="data-id=${course.id}">
+														<i class="btn-icon-prepend" data-feather="star"></i>
+													</button>
+												</td> <!-- Nueva columna -->
 												<td th:text="${course.name}">Aplicaciones web con Spring Boot</td>
 												<td th:text="${#temporals.format(course.startDate, 'dd/MM/yyyy')}">05/05/2021</td>
 												<td th:text="${course.schedule}">DOM 09:00 - 12:00</td>
@@ -245,6 +251,7 @@
 														</button>
 													</div>
 												</td>
+
 											</tr>
 										</tbody>
 									</table>
@@ -348,6 +355,7 @@
 			}
 		})
 	</script>
+
 </body>
 
 </html>
