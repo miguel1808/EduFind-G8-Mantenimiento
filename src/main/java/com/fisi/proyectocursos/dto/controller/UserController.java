@@ -93,6 +93,7 @@ public class UserController {
 		String passwordDB = user.getPassword();
 		
 		if (passwordEncoder.matches(passwordForm, passwordDB)) {
+			/*
 			String newPassword = passwordDTO.getNewPassword();
 			// SE AÑADE VALIDACIÓN DE CONTRASEÑA CON 8 CARACTERES MÍNIMO Y 1 MAYÚSCULA, 1 MINÚSCULA Y 1 NÚMERO
 			//	ESTO  SE HACE CON UNA EXPRESIÓN REGULAR
@@ -102,9 +103,14 @@ public class UserController {
 				redirectAttributes.addFlashAttribute("error", "La contraseña debe tener al menos 8 caracteres y contener al menos una mayúscula, una minúscula y un número");
 				return "redirect:/usuario/cuenta";
 			}
-			user.setPassword(passwordEncoder.encode(newPassword));
-			
-			userService.save(user);
+			*/
+			//        DIVISION DE  LOGICA ORIGINAL PARA EVITAR SOBREEXTENSION
+			//        EJEMPLO DE CODE SMELL: LONG METHOD
+			//		  Autor: Edgar Zenobio Pariasca
+			if (compruebaPassword(passwordDTO,redirectAttributes,user)){
+				return "redirect:/usuario/cuenta";
+			}
+
 			redirectAttributes.addFlashAttribute("notification", "Contraseña actualizada");
 		} else {
 			redirectAttributes.addFlashAttribute("error", "Contraseña actual incorrecta");
@@ -112,6 +118,22 @@ public class UserController {
 		
 		return "redirect:/usuario/cuenta";
 	}
-	
+
+	// Metodo nuevo
+	public boolean compruebaPassword(NewPasswordDTO pdto, RedirectAttributes redirectAttributes, @ModelAttribute("user") Person user){
+		String newPassword = pdto.getNewPassword();
+		// SE AÑADE VALIDACIÓN DE CONTRASEÑA CON 8 CARACTERES MÍNIMO Y 1 MAYÚSCULA, 1 MINÚSCULA Y 1 NÚMERO
+		//	ESTO  SE HACE CON UNA EXPRESIÓN REGULAR
+		// EL MOTIVO  DE ESTA VALIDACIÓN ES QUE LA CONTRASEÑA SEA MÁS SEGURA
+
+		if (newPassword.length() < 8 || !newPassword.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$")) {
+			redirectAttributes.addFlashAttribute("error", "La contraseña debe tener al menos 8 caracteres y contener al menos una mayúscula, una minúscula y un número");
+			return true;
+		}
+
+		user.setPassword(passwordEncoder.encode(newPassword));
+		userService.save(user);
+		return false;
+	}
 
 }
