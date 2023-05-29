@@ -85,12 +85,17 @@ public class ForgotPasswordController {
 
     @PostMapping("/restablecer_contrasena")
     public String restablecer(@ModelAttribute("recovery") RecoveryDTO recovery, Model model, RedirectAttributes redirectAttributes) {
-        User user = userService.findByResetPasswordToken(this.token);
-        userService.updatePassword(user, recovery.getNewPassword());
+//        MINIMIZACION DEL USO DE LA CLASE USERSERVICEIMPL EN EL CONTROLADOR
+//        EJEMPLO DE CODE SMELL: FEATURE ENVY
+        Boolean response = userService.resetPassword(this.token, recovery.getNewPassword());
+        if (response) {
+            redirectAttributes.addFlashAttribute("notification", "Tu contraseña se ha restablecido con éxito.");
+            return "redirect:/login";
+        } else {
+            model.addAttribute("msg", "El token es inválido.");
+            return "auth/change_password";
+        }
 
-        redirectAttributes.addFlashAttribute("notification", "Cambio de contraseña exitoso.");
-        this.token = null;
-        return "redirect:/login";
     }
 
     private void sendEmail(String email, String resetPasswordLink) throws UnsupportedEncodingException, MessagingException {

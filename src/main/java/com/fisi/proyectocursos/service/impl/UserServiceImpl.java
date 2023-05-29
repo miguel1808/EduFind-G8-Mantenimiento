@@ -90,5 +90,14 @@ public class UserServiceImpl implements IUserService {
 		userRepository.save(user);
 	}
 
+	public boolean resetPassword(String token, String newPassword) {
+		User user = findByResetPasswordToken(token);
+		if(user != null) {
+			updatePassword(user, newPassword);
+			return true;
+		}
+		return false;
+	}
+
 
 }
