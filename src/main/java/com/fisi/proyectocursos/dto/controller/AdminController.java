@@ -236,44 +236,53 @@ public class AdminController {
 	@PostMapping("/usuarios/nuevo")
 	public String nuevoUsuario(@ModelAttribute("userDTO") NewUserDTO dto,
 			RedirectAttributes redirectAttributes) {
-		
-		// Mejorar esto usando DTO
+		//        DIVISION DE  LA LOGICA ORIGINAL EN DOS METODOS PARA QUE EL METODO nuevoUsuario NO SEA TAN LARGO
+		//        EJEMPLO DE CODE SMELL: LONG METHOD
+//		Autor: Kevin Ramos Rivas
 		if (dto.getRole() == 3) {
-			TrainingCenter tc = new TrainingCenter();
-
-			tc.setUsername(dto.getUsername());
-			tc.setPassword(passwordEncoder.encode(dto.getPassword()));
-			tc.setName(dto.getName());
-			tc.setStatus(dto.getStatus());
-			tc.setRuc(dto.getRuc());
-			tc.setPhone(dto.getPhone());
-			
-			Set<Role> roles = new HashSet<>();
-			roles.add(new Role(dto.getRole()));
-			
-			tc.setRoles(roles);
-			
-			userService.save(tc);
+			createTrainingCenter(dto);
 		} else {
-			Person person = new Person();
-			
-			person.setUsername(dto.getUsername());
-			person.setPassword(passwordEncoder.encode(dto.getPassword()));
-			person.setStatus(dto.getStatus());
-			person.setFirstName(dto.getFirstName());
-			person.setLastName(dto.getLastName());
-			
-			Set<Role> roles = new HashSet<>();
-			roles.add(new Role(dto.getRole()));
-			
-			person.setRoles(roles);
-			
-			userService.save(person);
+			createPerson(dto);
 		}
 		
 		redirectAttributes.addFlashAttribute("notification", "Usuario creado");
 		
 		return "redirect:/admin/usuarios";
+	}
+// Nuevo metodo para crear un usuario de tipo TrainingCenter
+	public void createTrainingCenter(NewUserDTO dto) {
+		TrainingCenter tc = new TrainingCenter();
+
+		tc.setUsername(dto.getUsername());
+		tc.setPassword(passwordEncoder.encode(dto.getPassword()));
+		tc.setName(dto.getName());
+		tc.setStatus(dto.getStatus());
+		tc.setRuc(dto.getRuc());
+		tc.setPhone(dto.getPhone());
+
+		Set<Role> roles = new HashSet<>();
+		roles.add(new Role(dto.getRole()));
+
+		tc.setRoles(roles);
+
+		userService.save(tc);
+	}
+//	Nuevo metodo para crear un usuario de tipo Person
+	public void createPerson(NewUserDTO dto) {
+		Person person = new Person();
+
+		person.setUsername(dto.getUsername());
+		person.setPassword(passwordEncoder.encode(dto.getPassword()));
+		person.setStatus(dto.getStatus());
+		person.setFirstName(dto.getFirstName());
+		person.setLastName(dto.getLastName());
+
+		Set<Role> roles = new HashSet<>();
+		roles.add(new Role(dto.getRole()));
+
+		person.setRoles(roles);
+
+		userService.save(person);
 	}
 
 }
